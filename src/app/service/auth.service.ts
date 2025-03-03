@@ -1,31 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, from, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { User } from '../model/User';
-
-interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
-}
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterRequest {
-  name: string;
-  email: string;
-  password: string;
-  avatar: string;
-}
+import { environment } from '../../enviroments/enviroment';
+import { AuthResponse, LoginCredentials, RegisterRequest } from '../model/auth.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://api.escuelajs.co/api/v1/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
@@ -92,7 +77,6 @@ export class AuthService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  // Token handling methods
   getAccessToken(): string | null {
     return localStorage.getItem('access_token');
   }
@@ -102,7 +86,7 @@ export class AuthService {
   }
 
   register(userData: RegisterRequest): Observable<User> {
-    return this.http.post<User>('https://api.escuelajs.co/api/v1/users/', userData)
+    return this.http.post<User>(`${environment.apiUrl}/users/`, userData)
       .pipe(
         catchError(error => {
           console.error('Registration error:', error);
@@ -111,13 +95,12 @@ export class AuthService {
       );
   }
 
-  // Helper method to generate random avatar URL
+
   generateAvatarUrl(): string {
     const randomNum = Math.floor(Math.random() * 1000);
     return `https://picsum.photos/800?random=${randomNum}`;
   }
 
-  // Optional: Method to refresh token (if API supports it)
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = this.getRefreshToken();
     

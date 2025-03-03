@@ -68,7 +68,13 @@
         "label": "Heslo",
         "placeholder": "Zadejte heslo",
         "required": "Heslo je povinné",
-        "minLength": "Heslo musí mít alespoň 4 znaky"
+        "minLength": "Heslo musí mít alespoň 4 znaky",
+        "requirements": {
+          "title": "Heslo musí obsahovat:",
+          "length": "Alespoň 4 znaky",
+          "letter": "Alespoň jedno písmeno",
+          "number": "Alespoň jednu číslici"
+        }
       },
       "confirmPassword": {
         "label": "Potvrzení hesla",
@@ -91,7 +97,29 @@
 
   "products": {
     "title": "Produkty",
+    "category": {
+      "filter": "Filtrovat podle kategorie",
+      "all": "Všechny kategorie",
+      "label": "Kategorie"
+    },
+    "search": {
+      "label": "Hledat podle názvu",
+      "placeholder": "Zadejte název produktu"
+    },
+    "price": {
+      "label": "Cena"
+    },
     "form": {
+      "images": "Obrázky",
+      "removeImage": "Odstranit obrázek",
+      "addImage": "Přidat obrázek",
+      "errors": {
+        "titleRequired": "Název je povinný",
+        "descriptionRequired": "Popis je povinný",
+        "priceRequired": "Cena je povinná",
+        "priceMin": "Cena musí být větší než 0",
+        "categoryRequired": "Kategorie je povinná"
+      },
       "add": "Přidat produkt",
       "edit": "Upravit produkt",
       "title": {
@@ -127,8 +155,12 @@
       }
     },
     "buttons": {
-      "create": "Vytvořit",
-      "edit": "Upravit"
+      "add": "Přidat nový",
+      "edit": "Upravit",
+      "delete": "Smazat",
+      "loadMore": "Načíst další",
+      "addFirst": "Přidat první produkt",
+      "cancel": "Zrušit"
     },
     "noProducts": "Nebyly nalezeny žádné produkty",
     "confirmDelete": "Opravdu chcete smazat tento produkt?",
@@ -145,5 +177,10 @@
       "updateFailed": "Aktualizace produktu selhala",
       "deleteFailed": "Smazání produktu selhalo"
     }
+  },
+
+  "common": {
+    "update": "Aktualizovat",
+    "create": "Vytvořit"
   }
 }

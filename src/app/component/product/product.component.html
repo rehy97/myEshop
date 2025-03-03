@@ -3,6 +3,17 @@
   <div class="header">
     <h1>{{ 'products.title' | translate }}</h1>
     <div class="header-actions">
+      <!-- Search by name -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'products.search.label' | translate }}</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (keyup)="filterProducts()" placeholder="{{ 'products.search.placeholder' | translate }}">
+        <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''; filterProducts()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      
+      <!-- Category filter -->
       <mat-form-field appearance="outline">
         <mat-label>{{ 'products.category.filter' | translate }}</mat-label>
         <mat-select [(ngModel)]="selectedCategory" (selectionChange)="filterProducts()">

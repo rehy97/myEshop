@@ -10,13 +10,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { ProductService } from '../../service/product.service';
+import { CategoryService } from '../../service/category.service';
 import { Product } from '../../model/Product';
+import { Category } from '../../model/Category';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-product',
@@ -44,6 +47,7 @@ export class ProductComponent implements OnInit {
   filteredProducts: Product[] = [];
   categories: string[] = [];
   selectedCategory: string = '';
+  searchTerm: string = '';
   isLoading = false;
   currentOffset = 0;
   hasMoreProducts = true;
@@ -51,13 +55,45 @@ export class ProductComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private categoryService: CategoryService,
     private dialog: MatDialog,
     private toastr: ToastrService,
     private translate: TranslateService
   ) {}
 
   ngOnInit() {
-    this.loadProducts();
+    this.isLoading = true;
+    
+    // Načítáme produkty a kategorie současně
+    forkJoin({
+      products: this.productService.getProducts(this.currentOffset),
+      categories: this.categoryService.getCategories()
+    }).subscribe({
+      next: (results) => {
+        // Zpracování produktů
+        if (results.products.length === 0) {
+          this.hasMoreProducts = false;
+        } else {
+          this.products = results.products;
+          this.currentOffset += results.products.length;
+        }
+        
+        // Zpracování kategorií
+        if (results.categories && results.categories.length > 0) {
+          this.categories = results.categories.map(category => category.name);
+        }
+        
+        this.filterProducts();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toastr.error(
+          this.translate.instant('products.errors.loadFailed'),
+          this.translate.instant('products.errors.title')
+        );
+        this.isLoading = false;
+      }
+    });
   }
 
   loadProducts(loadMore: boolean = false) {
@@ -76,11 +112,6 @@ export class ProductComponent implements OnInit {
         } else {
           this.products = [...this.products, ...newProducts];
           this.currentOffset += newProducts.length;
-          
-          // Update categories only on initial load
-          if (!loadMore) {
-            this.categories = [...new Set(this.products.map(product => product.category.name))];
-          }
         }
         
         this.filterProducts();
@@ -105,13 +136,25 @@ export class ProductComponent implements OnInit {
   }
 
   filterProducts() {
-    if (!this.selectedCategory) {
-      this.filteredProducts = this.products;
-    } else {
-      this.filteredProducts = this.products.filter(
+    // Start with all products
+    let filtered = this.products;
+    
+    // Filter by category if selected
+    if (this.selectedCategory) {
+      filtered = filtered.filter(
         product => product.category.name === this.selectedCategory
       );
     }
+    
+    // Filter by search term if provided
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
+      const term = this.searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(
+        product => product.title.toLowerCase().includes(term)
+      );
+    }
+    
+    this.filteredProducts = filtered;
   }
 
   openAddDialog() {

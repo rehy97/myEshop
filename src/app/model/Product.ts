@@ -1,10 +1,26 @@
 import { Category } from "./Category"; // Ensure Category is properly exported from Category.ts
 
 export interface Product {
-  id: number; // Unique product identifier
-  title: string; // Name of the product
-  price: number; // Price of the product
-  description: string; // Description of the product
-  category: Category; // Category of the product, linked by the category object
-  images: string[]; // List of image URLs associated with the product
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: Category;
+  images: string[];
+}
+
+export interface CreateProductDTO {
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
+  images: string[];
+}
+
+export interface UpdateProductDTO {
+  title?: string;
+  price?: number;
+  description?: string;
+  categoryId?: number;
+  images?: string[];
 }

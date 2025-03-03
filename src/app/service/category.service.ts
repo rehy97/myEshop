@@ -1,4 +1,3 @@
-// category.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -54,10 +53,8 @@ export class CategoryService {
     let errorMessage = 'An error occurred';
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       switch (error.status) {
         case 404:
           errorMessage = 'Category not found';

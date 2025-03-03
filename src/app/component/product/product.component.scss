@@ -22,10 +22,20 @@
       display: flex;
       gap: 16px;
       align-items: center;
+      flex-wrap: wrap;
 
       mat-form-field {
-        width: 200px;
         margin-bottom: -1.25em;
+        
+        &:first-child {
+          // Search field (wider)
+          width: 250px;
+        }
+        
+        &:nth-child(2) {
+          // Category filter
+          width: 200px;
+        }
       }
     }
   }

@@ -4,29 +4,14 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Product } from '../model/Product';
 import { environment } from '../../enviroments/enviroment';
-
-interface CreateProductDTO {
-  title: string;
-  price: number;
-  description: string;
-  categoryId: number;
-  images: string[];
-}
-
-interface UpdateProductDTO {
-  title?: string;
-  price?: number;
-  description?: string;
-  categoryId?: number;
-  images?: string[];
-}
+import { CreateProductDTO, UpdateProductDTO } from '../model/Product'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;
-  private limit = 12; // Number of products per load
+  private limit = 12;
 
   constructor(private http: HttpClient) {}
 
@@ -66,10 +51,8 @@ export class ProductService {
     let errorMessage = 'An error occurred';
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       switch (error.status) {
         case 400:
           errorMessage = 'Invalid product data';
