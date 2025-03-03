@@ -1,0 +1,14 @@
+main {
+  margin-top: 64px;
+  background-color: var(--background-color);
+  min-height: calc(100vh - 64px);
+  padding: 16px;
+}
+
+@media (max-width: 599px) {
+  main {
+    margin-top: 56px;
+    min-height: calc(100vh - 56px);
+    padding: 12px;
+  }
+}
