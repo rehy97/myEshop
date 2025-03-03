@@ -1,0 +1,149 @@
+{
+  "header": {
+    "appName": "E-Shop",
+    "menu": {
+      "products": "Produkty",
+      "login": "Přihlášení",
+      "register": "Registrace",
+      "logout": "Odhlásit"
+    },
+    "languageChanged": "Jazyk byl úspěšně změněn",
+    "logoutSuccess": "Byli jste úspěšně odhlášeni",
+    "success": "Úspěch",
+    "info": "Informace"
+  },
+
+  "login": {
+    "title": "Přihlášení",
+    "subtitle": "Přihlaste se ke svému účtu",
+    "email": {
+      "label": "Email",
+      "placeholder": "Zadejte email",
+      "required": "Email je povinný",
+      "invalid": "Zadejte platný email"
+    },
+    "password": {
+      "label": "Heslo",
+      "placeholder": "Zadejte heslo",
+      "required": "Heslo je povinné",
+      "minLength": "Heslo musí mít alespoň 4 znaky",
+      "requirements": {
+        "title": "Heslo musí obsahovat:",
+        "length": "Alespoň 4 znaky",
+        "letter": "Alespoň jedno písmeno",
+        "number": "Alespoň jednu číslici"
+      }
+    },
+    "rememberMe": "Zapamatovat si mě",
+    "forgotPassword": "Zapomenuté heslo?",
+    "buttons": {
+      "submit": "Přihlásit se"
+    },
+    "registerLink": "Nemáte účet?",
+    "createAccount": "Vytvořit účet",
+    "success": "Přihlášení úspěšné",
+    "errors": {
+      "invalid": "Neplatný email nebo heslo",
+      "generic": "Při přihlašování došlo k chybě"
+    }
+  },
+
+  "register": {
+    "title": "Registrace",
+    "subtitle": "Vytvořte si účet",
+    "form": {
+      "name": {
+        "label": "Jméno",
+        "placeholder": "Zadejte jméno",
+        "required": "Jméno je povinné",
+        "invalid": "Zadejte platné jméno"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Zadejte email",
+        "required": "Email je povinný",
+        "invalid": "Zadejte platný email"
+      },
+      "password": {
+        "label": "Heslo",
+        "placeholder": "Zadejte heslo",
+        "required": "Heslo je povinné",
+        "minLength": "Heslo musí mít alespoň 4 znaky"
+      },
+      "confirmPassword": {
+        "label": "Potvrzení hesla",
+        "placeholder": "Potvrďte heslo",
+        "mismatch": "Hesla se neshodují"
+      }
+    },
+    "buttons": {
+      "submit": "Vytvořit účet"
+    },
+    "loginLink": "Již máte účet?",
+    "loginHere": "Přihlaste se zde",
+    "success": "Registrace úspěšná",
+    "errors": {
+      "emailExists": "Email již existuje",
+      "invalidData": "Neplatná registrační data",
+      "generic": "Při registraci došlo k chybě"
+    }
+  },
+
+  "products": {
+    "title": "Produkty",
+    "form": {
+      "add": "Přidat produkt",
+      "edit": "Upravit produkt",
+      "title": {
+        "label": "Název",
+        "placeholder": "Zadejte název produktu",
+        "required": "Název je povinný"
+      },
+      "price": {
+        "label": "Cena",
+        "placeholder": "Zadejte cenu",
+        "required": "Cena je povinná",
+        "invalid": "Zadejte platnou cenu"
+      },
+      "description": {
+        "label": "Popis",
+        "placeholder": "Zadejte popis produktu",
+        "required": "Popis je povinný"
+      },
+      "category": {
+        "label": "Kategorie",
+        "placeholder": "Vyberte kategorii",
+        "required": "Kategorie je povinná"
+      },
+      "imageUrl": {
+        "label": "URL obrázku",
+        "placeholder": "Zadejte URL obrázku",
+        "required": "URL obrázku je povinné"
+      },
+      "buttons": {
+        "add": "Přidat produkt",
+        "update": "Aktualizovat produkt",
+        "cancel": "Zrušit"
+      }
+    },
+    "buttons": {
+      "create": "Vytvořit",
+      "edit": "Upravit"
+    },
+    "noProducts": "Nebyly nalezeny žádné produkty",
+    "confirmDelete": "Opravdu chcete smazat tento produkt?",
+    "success": {
+      "title": "Úspěch",
+      "added": "Produkt byl úspěšně přidán",
+      "updated": "Produkt byl úspěšně aktualizován",
+      "deleted": "Produkt byl úspěšně smazán"
+    },
+    "errors": {
+      "title": "Chyba",
+      "loadFailed": "Načtení produktů selhalo",
+      "addFailed": "Přidání produktu selhalo",
+      "updateFailed": "Aktualizace produktu selhala",
+      "deleteFailed": "Smazání produktu selhalo"
+    }
+  }
+}

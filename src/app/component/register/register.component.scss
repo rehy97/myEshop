@@ -1,0 +1,247 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--background-color) 0%, #c5cae9 100%);
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.register-card {
+  max-width: 500px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px var(--shadow-color);
+  background: var(--light-text-color);
+  margin: 20px;
+  
+  mat-card-header {
+    text-align: center;
+    display: block;
+    margin-bottom: 32px;
+    padding: 24px 24px 0;
+
+    mat-card-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+      letter-spacing: -0.5px;
+    }
+
+    mat-card-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 24px;
+}
+
+.form-section {
+  background: rgba(var(--background-color), 0.05);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(var(--primary-color), 0.1);
+  }
+
+  &:last-of-type {
+    margin-bottom: 32px;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+
+  &.mat-form-field-appearance-outline {
+    .mat-form-field-outline {
+      color: rgba(0, 0, 0, 0.12);
+    }
+
+    &.mat-focused .mat-form-field-outline-thick {
+      color: var(--primary-color);
+    }
+
+    &.valid-field .mat-form-field-outline {
+      color: rgba(var(--success-color), 0.3);
+    }
+  }
+
+  .mat-icon {
+    color: var(--text-secondary);
+    
+    &.valid-icon {
+      color: var(--success-color) !important;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: scale(0.8);
+    }
+  }
+
+  &.valid-field .mat-icon.valid-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  input.mat-input-element {
+    color: var(--text-color);
+    font-size: 15px;
+  }
+
+  mat-label {
+    color: var(--text-secondary);
+  }
+
+  .mat-error {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+}
+
+.submit-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  margin-top: 16px;
+  transition: all 0.2s ease;
+  width: 100%;
+  
+  &:not([disabled]) {
+    background: var(--primary-color);
+    
+    &:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 4px 8px rgba(var(--primary-color), 0.3);
+    }
+  }
+  
+  mat-spinner {
+    display: inline-block;
+    margin-right: 8px;
+  }
+}
+
+.login-link {
+  text-align: center;
+  margin: 24px 0;
+  padding: 0 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 4px;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+  }
+}
+
+.form-section {
+  animation: sectionAppear 0.4s ease-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+  
+  @for $i from 1 through 2 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+}
+
+@keyframes sectionAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .register-container {
+    padding: 0;
+  }
+  
+  .form-section {
+    padding: 16px;
+    border-radius: 8px;
+  }
+}
+
+.password-requirements {
+  margin-top: -12px;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  background: rgba(var(--background-color), 0.05);
+  border-radius: 8px;
+
+  .requirements-title {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-bottom: 4px;
+      transition: color 0.3s ease;
+
+      mat-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+        margin-right: 8px;
+        transition: color 0.3s ease;
+      }
+
+      &.valid {
+        color: var(--success-color);
+        
+        mat-icon {
+          color: var(--success-color);
+        }
+      }
+    }
+  }
+}

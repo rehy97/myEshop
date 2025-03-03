@@ -1,0 +1,128 @@
+.product-form-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  h2 {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .close-button {
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--text-color);
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+mat-form-field {
+  &.mat-form-field-appearance-outline {
+    .mat-form-field-wrapper {
+      margin: 0;
+    }
+    
+    .mat-form-field-outline {
+      background-color: rgba(0, 0, 0, 0.01);
+    }
+  }
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.images-container {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+
+  h3 {
+    margin: 0 0 20px 0;
+    color: var(--primary-color);
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.image-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  
+  .mat-icon-button {
+    position: absolute;
+    right: -40px;
+    color: var(--error-color);
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+}
+
+.add-image-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 8px;
+  border: 2px dashed var(--primary-color);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(var(--primary-color), 0.04);
+  }
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+mat-dialog-actions {
+  padding: 24px 0 0;
+  margin: 24px -24px -24px;
+  gap: 12px;
+  background-color: rgba(0, 0, 0, 0.02);
+  padding: 16px 24px;
+
+  button {
+    min-width: 120px;
+    
+    &[color="primary"] {
+      height: 40px;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .mat-form-field-subscript-wrapper {
+    margin-top: 4px;
+  }
+
+  .mat-form-field-error {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}

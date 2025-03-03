@@ -1,0 +1,126 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>{{ 'register.title' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'register.subtitle' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+          <mat-form-field appearance="outline" [class.valid-field]="isFieldValid(name)">
+            <mat-label>{{ 'register.form.name.label' | translate }}</mat-label>
+            <input matInput
+                   [(ngModel)]="userData.name"
+                   name="name"
+                   #name="ngModel"
+                   required
+                   [pattern]="validationPatterns.name">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-icon matSuffix *ngIf="isFieldValid(name)" class="valid-icon">check_circle</mat-icon>
+            <mat-error *ngIf="name.errors?.['required']">
+              {{ 'register.form.name.required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="name.errors?.['pattern']">
+              {{ 'register.name.invalid' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" [class.valid-field]="isFieldValid(email)">
+            <mat-label>{{ 'register.form.email.label' | translate }}</mat-label>
+            <input matInput 
+                   type="email"
+                   [(ngModel)]="userData.email"
+                   name="email"
+                   #email="ngModel"
+                   required
+                   [pattern]="validationPatterns.email">
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-icon matSuffix *ngIf="isFieldValid(email)" class="valid-icon">check_circle</mat-icon>
+            <mat-error *ngIf="email.errors?.['required']">
+              {{ 'register.form.email.required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="email.errors?.['pattern']">
+              {{ 'register.form.email.invalid' | translate }}
+            </mat-error>
+          </mat-form-field>       
+
+          <mat-form-field appearance="outline" [class.valid-field]="isFieldValid(password)">
+            <mat-label>{{ 'register.form.password.label' | translate }}</mat-label>
+            <input matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                [(ngModel)]="userData.password"
+                (input)="checkPasswordRequirements(userData.password)"
+                name="password"
+                #password="ngModel"
+                required
+                [pattern]="validationPatterns.password">
+            <mat-icon matPrefix>lock</mat-icon>
+            <mat-icon matSuffix *ngIf="isFieldValid(password)" class="valid-icon">check_circle</mat-icon>
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="password.errors?.['required']">
+              {{ 'register.form.password.required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="password.errors?.['pattern']">
+              {{ 'register.form.password.invalid' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <div class="password-requirements">
+            <p class="requirements-title">{{ 'register.form.password.requirements.title' | translate }}</p>
+            <ul>
+              <li [class.valid]="passwordRequirements.length">
+                <mat-icon>{{ passwordRequirements.length ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                {{ 'register.password.requirements.length' | translate }}
+              </li>
+              <li [class.valid]="passwordRequirements.letter">
+                <mat-icon>{{ passwordRequirements.letter ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                {{ 'register.password.requirements.letter' | translate }}
+              </li>
+              <li [class.valid]="passwordRequirements.number">
+                <mat-icon>{{ passwordRequirements.number ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                {{ 'register.password.requirements.number' | translate }}
+              </li>
+            </ul>
+          </div>   
+
+          <mat-form-field appearance="outline" [class.valid-field]="isFieldValid(passwordConfirm) && passwordsMatch()">
+            <mat-label>{{ 'register.form.confirmPassword.label' | translate }}</mat-label>
+            <input matInput
+                   [type]="hideConfirmPassword ? 'password' : 'text'"
+                   [(ngModel)]="confirmPassword"
+                   name="confirmPassword"
+                   #passwordConfirm="ngModel"
+                   required>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <mat-icon matSuffix *ngIf="isFieldValid(passwordConfirm) && passwordsMatch()" 
+                    class="valid-icon">check_circle</mat-icon>
+            <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" 
+                    type="button">
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="!passwordsMatch()">
+              {{ 'register.form.confirmPassword.mismatch' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!registerForm.valid || !passwordsMatch() || isLoading"
+                class="submit-button">
+          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+          <span *ngIf="!isLoading">{{ 'register.buttons.submit' | translate }}</span>
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer>
+      <p class="login-link">
+        {{ 'register.loginLink' | translate }}
+        <a routerLink="/login" color="primary">{{ 'register.loginHere' | translate }}</a>
+      </p>
+    </mat-card-footer>
+  </mat-card>
+</div>

@@ -1,0 +1,93 @@
+<div class="product-form-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon>{{ data ? 'edit' : 'add_shopping_cart' }}</mat-icon>
+      {{ (data ? 'products.form.edit' : 'products.form.add') | translate }}
+    </h2>
+    <button mat-icon-button [mat-dialog-close]="undefined" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+      <!-- Title -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'products.form.title' | translate }}</mat-label>
+        <input matInput formControlName="title" required>
+        <mat-error *ngIf="productForm.get('title')?.errors?.['required']">
+          {{ 'products.form.errors.titleRequired' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'products.form.description' | translate }}</mat-label>
+        <textarea matInput formControlName="description" rows="4" required></textarea>
+        <mat-error *ngIf="productForm.get('description')?.errors?.['required']">
+          {{ 'products.form.errors.descriptionRequired' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Price -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'products.form.price' | translate }}</mat-label>
+        <div matPrefix>$&nbsp;</div>
+        <input matInput type="number" formControlName="price" required min="0" step="0.01">
+        <mat-icon matSuffix>attach_money</mat-icon>
+        <mat-error *ngIf="productForm.get('price')?.errors?.['required']">
+          {{ 'products.form.errors.priceRequired' | translate }}
+        </mat-error>
+        <mat-error *ngIf="productForm.get('price')?.errors?.['min']">
+          {{ 'products.form.errors.priceMin' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Category -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'products.form.category' | translate }}</mat-label>
+        <mat-select formControlName="categoryId" required>
+          <mat-option *ngFor="let category of categories" [value]="category.id">
+            {{category.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="productForm.get('categoryId')?.errors?.['required']">
+          {{ 'products.form.errors.categoryRequired' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Image URLs -->
+      <div formArrayName="images" class="images-container">
+        <h3>{{ 'products.form.images' | translate }}</h3>
+        
+        <div *ngFor="let imageCtrl of imageControls; let i = index" class="image-input">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'products.form.imageUrl' | translate }} {{i + 1}}</mat-label>
+            <input matInput [formControlName]="i" required>
+            <button mat-icon-button matSuffix type="button" 
+                    *ngIf="i > 0"
+                    (click)="removeImage(i)"
+                    [attr.aria-label]="'products.form.removeImage' | translate">
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <button mat-stroked-button type="button" 
+                (click)="addImage()"
+                class="add-image-btn">
+          <mat-icon>add</mat-icon>
+          {{ 'products.form.addImage' | translate }}
+        </button>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-raised-button color="primary" 
+              type="submit"
+              [disabled]="!productForm.valid || isSubmitting">
+        {{ (data ? 'common.update' : 'common.create') | translate }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

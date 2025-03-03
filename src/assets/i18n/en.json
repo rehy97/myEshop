@@ -1,0 +1,150 @@
+{
+  "header": {
+    "appName": "E-Shop",
+    "menu": {
+      "products": "Products",
+      "login": "Login",
+      "register": "Register",
+      "logout": "Logout"
+    },
+    "languageChanged": "Language changed successfully",
+    "logoutSuccess": "Logged out successfully",
+    "success": "Success",
+    "info": "Information"
+  },
+
+  "login": {
+    "title": "Login",
+    "subtitle": "Sign in to your account",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email",
+      "required": "Email is required",
+      "invalid": "Please enter a valid email"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password",
+      "required": "Password is required",
+      "minLength": "Password must be at least 4 characters long"
+    },
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "buttons": {
+      "submit": "Sign In"
+    },
+    "registerLink": "Don't have an account?",
+    "createAccount": "Create Account",
+    "success": "Login successful",
+    "errors": {
+      "invalid": "Invalid email or password",
+      "generic": "An error occurred during login"
+    }
+  },
+
+  "register": {
+    "title": "Register",
+    "subtitle": "Create your account",
+    "form": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter your name",
+        "required": "Name is required",
+        "invalid": "Please enter a valid name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email",
+        "required": "Email is required",
+        "invalid": "Please enter a valid email"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "required": "Password is required",
+        "minLength": "Password must be at least 4 characters long",
+        "requirements": {
+          "title": "Password must contain:",
+          "length": "At least 4 characters",
+          "letter": "At least one letter",
+          "number": "At least one number"
+        }
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm your password",
+        "mismatch": "Passwords do not match"
+      }
+    },
+    "buttons": {
+      "submit": "Create Account"
+    },
+    "loginLink": "Already have an account?",
+    "loginHere": "Login here",
+    "success": "Registration successful",
+    "errors": {
+      "emailExists": "Email already exists",
+      "invalidData": "Invalid registration data",
+      "generic": "An error occurred during registration"
+    }
+  },
+
+  "products": {
+    "title": "Products",
+    "form": {
+      "add": "Add Product",
+      "edit": "Edit Product",
+      "title": {
+        "label": "Title",
+        "placeholder": "Enter product title",
+        "required": "Title is required"
+      },
+      "price": {
+        "label": "Price",
+        "placeholder": "Enter price",
+        "required": "Price is required",
+        "invalid": "Please enter a valid price"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter product description",
+        "required": "Description is required"
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Select category",
+        "required": "Category is required"
+      },
+      "imageUrl": {
+        "label": "Image URL",
+        "placeholder": "Enter image URL",
+        "required": "Image URL is required"
+      },
+      "buttons": {
+        "add": "Add Product",
+        "update": "Update Product",
+        "cancel": "Cancel"
+      }
+    },
+    "buttons": {
+      "add": "Add New",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "noProducts": "No products found",
+    "confirmDelete": "Are you sure you want to delete this product?",
+    "success": {
+      "title": "Success",
+      "added": "Product added successfully",
+      "updated": "Product updated successfully",
+      "deleted": "Product deleted successfully"
+    },
+    "errors": {
+      "title": "Error",
+      "loadFailed": "Failed to load products",
+      "addFailed": "Failed to add product",
+      "updateFailed": "Failed to update product",
+      "deleteFailed": "Failed to delete product"
+    }
+  }
+}

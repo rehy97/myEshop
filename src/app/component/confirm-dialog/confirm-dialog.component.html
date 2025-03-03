@@ -1,0 +1,20 @@
+<div class="confirm-dialog">
+    <div class="dialog-header" mat-dialog-title>
+      <mat-icon class="warning-icon">warning</mat-icon>
+      <h2>{{ data.title }}</h2>
+    </div>
+  
+    <mat-dialog-content>
+      <p>{{ data.message }}</p>
+      <p class="product-name">{{ data.productName }}</p>
+    </mat-dialog-content>
+  
+    <mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="false">
+        {{ 'products.buttons.cancel' | translate }}
+      </button>
+      <button mat-raised-button color="warn" [mat-dialog-close]="true">
+        {{ 'products.buttons.delete' | translate }}
+      </button>
+    </mat-dialog-actions>
+  </div>

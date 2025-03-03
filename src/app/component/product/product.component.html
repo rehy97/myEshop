@@ -1,0 +1,72 @@
+<!-- products.component.html -->
+<div class="products-container">
+  <div class="header">
+    <h1>{{ 'products.title' | translate }}</h1>
+    <div class="header-actions">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'products.category.filter' | translate }}</mat-label>
+        <mat-select [(ngModel)]="selectedCategory" (selectionChange)="filterProducts()">
+          <mat-option value="">{{ 'products.category.all' | translate }}</mat-option>
+          <mat-option *ngFor="let category of categories" [value]="category">
+            {{category}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="openAddDialog()">
+        <mat-icon>add</mat-icon>
+        {{ 'products.buttons.add' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-spinner" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+  
+  <div class="products-grid" *ngIf="!isLoading">
+    <mat-card *ngFor="let product of filteredProducts" class="product-card">
+      <!-- Rest of the card template remains the same -->
+      <mat-card-header>
+        <mat-card-title>{{product.title}}</mat-card-title>
+        <mat-card-subtitle>{{ 'products.category.label' | translate }}: {{product.category.name}}</mat-card-subtitle>
+      </mat-card-header>
+
+      <img mat-card-image [src]="product.images[0]" [alt]="product.title">
+      
+      <mat-card-content>
+        <p class="description">{{product.description}}</p>
+        <p class="price">{{ 'products.price.label' | translate }}: {{product.price | currency}}</p>
+      </mat-card-content>
+      
+      <mat-card-actions>
+        <button mat-icon-button color="primary" (click)="openEditDialog(product)" 
+                [matTooltip]="'products.buttons.edit' | translate">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" 
+                (click)="deleteProduct(product.id, $event)"
+                [matTooltip]="'products.buttons.delete' | translate">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="load-more-section" *ngIf="!isLoading && hasMoreProducts && filteredProducts.length > 0">
+    <button mat-raised-button 
+            color="primary" 
+            (click)="loadMoreProducts()" 
+            [disabled]="isLoadingMore">
+      <mat-spinner diameter="20" *ngIf="isLoadingMore"></mat-spinner>
+      <span *ngIf="!isLoadingMore">{{ 'products.buttons.loadMore' | translate }}</span>
+    </button>
+  </div>
+
+  <div class="no-products" *ngIf="!isLoading && filteredProducts.length === 0">
+    <mat-icon>inventory</mat-icon>
+    <p>{{ 'products.noProducts' | translate }}</p>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      {{ 'products.buttons.addFirst' | translate }}
+    </button>
+  </div>
+</div>
