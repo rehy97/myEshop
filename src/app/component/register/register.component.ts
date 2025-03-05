@@ -57,7 +57,6 @@ export class RegisterComponent {
     };
   }
   
-  // Upravte existující validační vzory
   validationPatterns = {
     email: '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$',
     name: '^[A-Za-žÀ-ž\\s]{2,30}$',
@@ -70,7 +69,6 @@ export class RegisterComponent {
     private toastr: ToastrService,
     private translate: TranslateService
   ) {
-    // Generate random avatar URL on component initialization
     this.userData.avatar = this.authService.generateAvatarUrl();
   }
 
@@ -86,29 +84,29 @@ export class RegisterComponent {
     if (this.isLoading || !form.valid || !this.passwordsMatch()) return;
     
     this.isLoading = true;
-    
-    try {
-      await this.authService.register(this.userData).toPromise();
+
+    this.authService.register(this.userData).subscribe({
+      next: (user) => {
+        this.toastr.success(
+          this.translate.instant('register.success'),
+          this.translate.instant('register.title')
+        );
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        let errorMessage = this.translate.instant('register.errors.generic');
       
-      this.toastr.success(
-        this.translate.instant('register.success'),
-        this.translate.instant('register.title')
-      );
-      
-      // Navigate to login page after successful registration
-      this.router.navigate(['/login']);
-    } catch (error) {
-      let errorMessage = this.translate.instant('register.errors.generic');
-      
-      if ((error as any).status === 409) {
-        errorMessage = this.translate.instant('register.errors.emailExists');
-      } else if ((error as any).status === 400) {
-        errorMessage = this.translate.instant('register.errors.invalidData');
+        if ((error as any).status === 409) {
+          errorMessage = this.translate.instant('register.errors.emailExists');
+        } else if ((error as any).status === 400) {
+          errorMessage = this.translate.instant('register.errors.invalidData');
+        }
+        
+        this.toastr.error(errorMessage, this.translate.instant('register.title'));
+      },
+      complete: () => {
+        this.isLoading = false;
       }
-      
-      this.toastr.error(errorMessage, this.translate.instant('register.title'));
-    } finally {
-      this.isLoading = false;
-    }
+    });
   }
 }

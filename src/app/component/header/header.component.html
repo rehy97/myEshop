@@ -1,11 +1,9 @@
 <mat-toolbar color="primary">
-  <!-- Logo and Home Link -->
   <a mat-button routerLink="/" class="logo-link">
     <mat-icon>shopping_cart</mat-icon>
     <span class="logo-text">{{ 'header.appName' | translate }}</span>
   </a>
 
-  <!-- Navigation Links -->
   <ng-container *ngIf="isLoggedIn">
     <a mat-button routerLink="/products" routerLinkActive="active">
       <mat-icon>inventory_2</mat-icon>
@@ -15,7 +13,6 @@
 
   <span class="spacer"></span>
 
-  <!-- Language Selector -->
   <button mat-button [matMenuTriggerFor]="languageMenu" class="language-btn">
     <mat-icon>language</mat-icon>
     {{ currentLang.toUpperCase() }}
@@ -28,7 +25,6 @@
     </button>
   </mat-menu>
 
-  <!-- User Menu -->
   <ng-container *ngIf="isLoggedIn">
     <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
       <mat-icon>account_circle</mat-icon>
@@ -42,7 +38,6 @@
     </mat-menu>
   </ng-container>
 
-  <!-- Login/Register Links -->
   <ng-container *ngIf="!isLoggedIn">
     <a mat-button routerLink="/login" routerLinkActive="active">
       <mat-icon>login</mat-icon>

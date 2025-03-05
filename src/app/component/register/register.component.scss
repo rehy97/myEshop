@@ -126,11 +126,13 @@ mat-form-field {
   width: 100%;
   
   &:not([disabled]) {
-    background: var(--primary-color);
+    background: #2196f3;
+    color: var(--text-primary-dark);
     
     &:hover {
-      background: var(--primary-dark);
-      box-shadow: 0 4px 8px rgba(var(--primary-color), 0.3);
+      background: #2196f3;
+      color: var(--text-primary-dark);
+      box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
     }
   }
   

@@ -64,13 +64,11 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.isLoading = true;
     
-    // Načítáme produkty a kategorie současně
     forkJoin({
       products: this.productService.getProducts(this.currentOffset),
       categories: this.categoryService.getCategories()
     }).subscribe({
       next: (results) => {
-        // Zpracování produktů
         if (results.products.length === 0) {
           this.hasMoreProducts = false;
         } else {
@@ -78,7 +76,6 @@ export class ProductComponent implements OnInit {
           this.currentOffset += results.products.length;
         }
         
-        // Zpracování kategorií
         if (results.categories && results.categories.length > 0) {
           this.categories = results.categories.map(category => category.name);
         }
@@ -136,17 +133,14 @@ export class ProductComponent implements OnInit {
   }
 
   filterProducts() {
-    // Start with all products
     let filtered = this.products;
     
-    // Filter by category if selected
     if (this.selectedCategory) {
       filtered = filtered.filter(
         product => product.category.name === this.selectedCategory
       );
     }
     
-    // Filter by search term if provided
     if (this.searchTerm && this.searchTerm.trim() !== '') {
       const term = this.searchTerm.toLowerCase().trim();
       filtered = filtered.filter(
