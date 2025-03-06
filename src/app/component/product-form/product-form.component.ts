@@ -104,7 +104,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     let processedImages: string[] = [];
     
     if (this.data.images) {
-        const images: any = this.data.images;  // explicitní typování
+        const images: any = this.data.images;  
         if (typeof images === 'string') {
             try {
                 let cleaned = images.replace(/[\[\]"]/g, '');
@@ -144,7 +144,6 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       
       const formValue = this.productForm.value;
       
-      // Ensure images array doesn't contain empty strings
       formValue.images = formValue.images.filter((url: string) => url.trim());
       
       this.dialogRef.close(formValue);

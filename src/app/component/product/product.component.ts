@@ -178,14 +178,12 @@ export class ProductComponent implements OnInit {
   }
   
   onPriceChange() {
-    // Validace pouze v případě, že obě hodnoty existují a uživatel dokončil zadávání
     if (this.priceMin !== null && this.priceMax !== null) {
-      // Přidáme timeout, aby měl uživatel čas dokončit zadávání
       setTimeout(() => {
         if (this.priceMin !== null && this.priceMax !== null && this.priceMax < this.priceMin) {
           this.priceMax = this.priceMin;
         }
-      }, 1000); // Čekáme 1 sekundu po poslední změně
+      }, 1000);
     }
     
     this.priceChanges.next();
