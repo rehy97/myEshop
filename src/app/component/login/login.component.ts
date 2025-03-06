@@ -62,33 +62,36 @@ export class LoginComponent implements OnInit {
     
     this.isLoading = true;
     
-    try {
-      const response = await this.authService.login(this.credentials).toPromise();
-      
-      if (this.rememberMe) {
-        localStorage.setItem('rememberedUser', JSON.stringify({ 
-          email: this.credentials.email 
-        }));
-      } else {
-        localStorage.removeItem('rememberedUser');
-      }
+    this.authService.login(this.credentials).subscribe({
+      next: (response) => {
+        if (this.rememberMe) {
+          localStorage.setItem('rememberedUser', JSON.stringify({ 
+            email: this.credentials.email 
+          }));
+        } else {
+          localStorage.removeItem('rememberedUser');
+        }
 
-      this.toastr.success(
-        this.translate.instant('login.success'),
-        this.translate.instant('login.title')
-      );
+        this.toastr.success(
+          this.translate.instant('login.success'),
+          this.translate.instant('login.title')
+        );
+        
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        let errorMessage = this.translate.instant('login.errors.generic');
       
-      this.router.navigate(['/']);
-    } catch (error) {
-      let errorMessage = this.translate.instant('login.errors.generic');
-      
-      if ((error as any).status === 401) {
-        errorMessage = this.translate.instant('login.errors.invalid');
+        if ((error as any).status === 401) {
+          errorMessage = this.translate.instant('login.errors.invalid');
+        }
+        
+        this.toastr.error(errorMessage, this.translate.instant('login.title'));
+      },
+      complete: () => {
+        this.isLoading = false;
       }
-      
-      this.toastr.error(errorMessage, this.translate.instant('login.title'));
-    } finally {
-      this.isLoading = false;
-    }
+    });
   }
 }
