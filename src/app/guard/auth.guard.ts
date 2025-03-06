@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, UrlTree } from '@angular/router';
-import { AuthService } from '../service/auth.service';
+import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';

@@ -9,7 +9,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
 import { routes } from './app.routes';
-import { CategoryService } from './service/category.service';
+import { CategoryService } from './services/category.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

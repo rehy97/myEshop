@@ -1,4 +1,4 @@
-import { Category } from "./Category"; // Ensure Category is properly exported from Category.ts
+import { Category } from "./category.model";
 
 export interface Product {
   id: number;

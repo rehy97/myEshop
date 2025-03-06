@@ -9,17 +9,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
-import { ProductService } from '../../service/product.service';
-import { CategoryService } from '../../service/category.service';
-import { Product } from '../../model/Product';
-import { Category } from '../../model/Category';
-import { ProductFormComponent } from '../product-form/product-form.component';
-import { ToastrService } from 'ngx-toastr';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
+
+import { ProductService } from '../../services/product.service';
+import { CategoryService } from '../../services/category.service';
+import { Product } from '../../models/product.model';
+import { ProductFormComponent } from '../product-form/product-form.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-product',
@@ -62,6 +62,10 @@ export class ProductComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loadInitialData();
+  }
+
+  loadInitialData() {
     this.isLoading = true;
     
     forkJoin({
@@ -69,25 +73,13 @@ export class ProductComponent implements OnInit {
       categories: this.categoryService.getCategories()
     }).subscribe({
       next: (results) => {
-        if (results.products.length === 0) {
-          this.hasMoreProducts = false;
-        } else {
-          this.products = results.products;
-          this.currentOffset += results.products.length;
-        }
-        
-        if (results.categories && results.categories.length > 0) {
-          this.categories = results.categories.map(category => category.name);
-        }
-        
+        this.processProductResults(results.products);
+        this.processCategoriesResults(results.categories);
         this.filterProducts();
         this.isLoading = false;
       },
       error: (error) => {
-        this.toastr.error(
-          this.translate.instant('products.errors.loadFailed'),
-          this.translate.instant('products.errors.title')
-        );
+        this.handleError('products.errors.loadFailed');
         this.isLoading = false;
       }
     });
@@ -95,35 +87,45 @@ export class ProductComponent implements OnInit {
 
   loadProducts(loadMore: boolean = false) {
     if (!loadMore) {
-      this.isLoading = true;
-      this.currentOffset = 0;
-      this.products = [];
+      this.resetProductsList();
     } else {
       this.isLoadingMore = true;
     }
 
     this.productService.getProducts(this.currentOffset).subscribe({
-      next: (newProducts) => {
-        if (newProducts.length === 0) {
-          this.hasMoreProducts = false;
-        } else {
-          this.products = [...this.products, ...newProducts];
-          this.currentOffset += newProducts.length;
-        }
-        
+      next: (newProducts: Product[]) => {
+        this.processProductResults(newProducts);
         this.filterProducts();
         this.isLoading = false;
         this.isLoadingMore = false;
       },
-      error: (error) => {
-        this.toastr.error(
-          this.translate.instant('products.errors.loadFailed'),
-          this.translate.instant('products.errors.title')
-        );
+      error: (error: any) => {
+        this.handleError('products.errors.loadFailed');
         this.isLoading = false;
         this.isLoadingMore = false;
       }
     });
+  }
+
+  private resetProductsList() {
+    this.isLoading = true;
+    this.currentOffset = 0;
+    this.products = [];
+  }
+
+  private processProductResults(products: Product[]) {
+    if (products.length === 0) {
+      this.hasMoreProducts = false;
+    } else {
+      this.products = [...this.products, ...products];
+      this.currentOffset += products.length;
+    }
+  }
+
+  private processCategoriesResults(categories: any[]) {
+    if (categories && categories.length > 0) {
+      this.categories = categories.map(category => category.name);
+    }
   }
 
   loadMoreProducts() {
@@ -158,21 +160,19 @@ export class ProductComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.productService.createProduct(result).subscribe({
-          next: () => {
-            this.toastr.success(
-              this.translate.instant('products.success.added'),
-              this.translate.instant('products.success.title')
-            );
-            this.loadProducts();
-          },
-          error: (error) => {
-            this.toastr.error(
-              this.translate.instant('products.errors.addFailed'),
-              this.translate.instant('products.errors.title')
-            );
-          }
-        });
+        this.createProduct(result);
+      }
+    });
+  }
+
+  private createProduct(productData: any) {
+    this.productService.createProduct(productData).subscribe({
+      next: () => {
+        this.showSuccess('products.success.added');
+        this.loadProducts();
+      },
+      error: () => {
+        this.handleError('products.errors.addFailed');
       }
     });
   }
@@ -185,21 +185,19 @@ export class ProductComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && product.id) {
-        this.productService.updateProduct(product.id, result).subscribe({
-          next: () => {
-            this.toastr.success(
-              this.translate.instant('products.success.updated'),
-              this.translate.instant('products.success.title')
-            );
-            this.loadProducts();
-          },
-          error: (error) => {
-            this.toastr.error(
-              this.translate.instant('products.errors.updateFailed'),
-              this.translate.instant('products.errors.title')
-            );
-          }
-        });
+        this.updateProduct(product.id, result);
+      }
+    });
+  }
+
+  private updateProduct(id: number, productData: any) {
+    this.productService.updateProduct(id, productData).subscribe({
+      next: () => {
+        this.showSuccess('products.success.updated');
+        this.loadProducts();
+      },
+      error: () => {
+        this.handleError('products.errors.updateFailed');
       }
     });
   }
@@ -214,28 +212,41 @@ export class ProductComponent implements OnInit {
       width: '400px',
       data: {
         title: this.translate.instant('products.confirmDelete'),
+        message: this.translate.instant('products.confirmDelete'),
         productName: productName
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.productService.deleteProduct(id).subscribe({
-          next: () => {
-            this.toastr.success(
-              this.translate.instant('products.success.deleted'),
-              this.translate.instant('products.success.title')
-            );
-            this.loadProducts();
-          },
-          error: (error) => {
-            this.toastr.error(
-              this.translate.instant('products.errors.deleteFailed'),
-              this.translate.instant('products.errors.title')
-            );
-          }
-        });
+        this.performDeleteProduct(id);
       }
     });
+  }
+
+  private performDeleteProduct(id: number) {
+    this.productService.deleteProduct(id).subscribe({
+      next: () => {
+        this.showSuccess('products.success.deleted');
+        this.loadProducts();
+      },
+      error: () => {
+        this.handleError('products.errors.deleteFailed');
+      }
+    });
+  }
+
+  private showSuccess(messageKey: string) {
+    this.toastr.success(
+      this.translate.instant(messageKey),
+      this.translate.instant('products.success.title')
+    );
+  }
+
+  private handleError(messageKey: string) {
+    this.toastr.error(
+      this.translate.instant(messageKey),
+      this.translate.instant('products.errors.title')
+    );
   }
 }

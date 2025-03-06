@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Product } from '../model/Product';
+import { Product, CreateProductDTO, UpdateProductDTO } from '../models/product.model';
 import { environment } from '../../enviroments/enviroment';
-import { CreateProductDTO, UpdateProductDTO } from '../model/Product'
+import { ErrorHandlingService } from './error-handling.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,10 @@ export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;
   private limit = 12;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private errorService: ErrorHandlingService
+  ) {}
 
   getProducts(offset: number = 0): Observable<Product[]> {
     const params = new HttpParams()
@@ -22,53 +25,28 @@ export class ProductService {
 
     return this.http.get<Product[]>(this.apiUrl, { params })
       .pipe(
-        catchError(this.handleError)
+        catchError(error => this.errorService.handleHttpError(error))
       );
   }
 
   createProduct(product: CreateProductDTO): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, product)
       .pipe(
-        catchError(this.handleError)
+        catchError(error => this.errorService.handleHttpError(error))
       );
   }
 
   updateProduct(id: number, changes: UpdateProductDTO): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${id}`, changes)
       .pipe(
-        catchError(this.handleError)
+        catchError(error => this.errorService.handleHttpError(error))
       );
   }
 
   deleteProduct(id: number): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/${id}`)
       .pipe(
-        catchError(this.handleError)
+        catchError(error => this.errorService.handleHttpError(error))
       );
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An error occurred';
-
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      switch (error.status) {
-        case 400:
-          errorMessage = 'Invalid product data';
-          break;
-        case 404:
-          errorMessage = 'Product not found';
-          break;
-        case 409:
-          errorMessage = 'Product already exists';
-          break;
-        default:
-          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      }
-    }
-
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
   }
 }

@@ -8,9 +8,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { CategoryService } from '../../service/category.service';
-import { Product } from '../../model/Product';
-import { Category } from '../../model/Category';
+import { CategoryService } from '../../services/category.service';
+import { Product } from '../../models/product.model';
+import { Category } from '../../models/category.model';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
