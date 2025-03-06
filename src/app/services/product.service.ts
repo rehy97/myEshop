@@ -37,14 +37,14 @@ export class ProductService {
       params = params.set('categoryId', categoryId.toString());
     }
     
-    if (price_min !== undefined) {
+    if (price_min !== undefined && price_min !== null) {
       params = params.set('price_min', price_min.toString());
     }
     
-    if (price_max !== undefined) {
+    if (price_max !== undefined && price_max !== null) {
       params = params.set('price_max', price_max.toString());
     }
-
+  
     return this.http.get<Product[]>(this.apiUrl, { params })
       .pipe(
         catchError(error => this.errorService.handleHttpError(error))

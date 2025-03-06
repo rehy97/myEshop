@@ -31,6 +31,32 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      
+      <div class="price-filter">
+        <mat-form-field appearance="outline" class="price-input">
+          <mat-label>{{ 'products.price.min' | translate }}</mat-label>
+          <input 
+            matInput 
+            type="number" 
+            [(ngModel)]="priceMin" 
+            min="0"
+            (ngModelChange)="onPriceChange()">
+        </mat-form-field>
+        
+        <span class="price-separator">-</span>
+        
+        <mat-form-field appearance="outline" class="price-input">
+          <mat-label>{{ 'products.price.max' | translate }}</mat-label>
+          <input 
+            matInput 
+            type="number" 
+            [(ngModel)]="priceMax" 
+            min="0"
+            (ngModelChange)="onPriceChange()">
+        </mat-form-field>
+      </div>
+      
+      <!-- Tlačítko pro přidání produktu -->
       <button mat-raised-button color="primary" (click)="openAddDialog()">
         <mat-icon>add</mat-icon>
         {{ 'products.buttons.add' | translate }}
@@ -38,10 +64,12 @@
     </div>
   </div>
 
+  <!-- Indikátor načítání -->
   <div class="loading-spinner" *ngIf="isLoading">
     <mat-spinner diameter="40"></mat-spinner>
   </div>
   
+  <!-- Mřížka produktů -->
   <div class="products-grid" *ngIf="!isLoading">
     <mat-card *ngFor="let product of filteredProducts" class="product-card">
       <mat-card-header>
@@ -75,6 +103,7 @@
     </mat-card>
   </div>
 
+  <!-- Tlačítko "Načíst další" -->
   <div class="load-more-section" *ngIf="!isLoading && hasMoreProducts && filteredProducts.length > 0">
     <button 
       mat-raised-button
@@ -86,6 +115,7 @@
     </button>
   </div>
 
+  <!-- Prázdný stav -->
   <div class="no-products" *ngIf="!isLoading && filteredProducts.length === 0">
     <mat-icon>inventory</mat-icon>
     <p>{{ 'products.noProducts' | translate }}</p>

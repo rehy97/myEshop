@@ -49,13 +49,15 @@ export class ProductComponent implements OnInit {
   categories: string[] = [];
   selectedCategory: string = '';
   searchTerm: string = '';
+  priceMin: number | null = null;
+  priceMax: number | null = null;
   isLoading = false;
   currentOffset = 0;
   hasMoreProducts = true;
   isLoadingMore = false;
   
-  // Pro implementaci debounce vyhledávání
   private searchTerms = new Subject<string>();
+  private priceChanges = new Subject<void>();
 
   constructor(
     private productService: ProductService,
@@ -64,12 +66,17 @@ export class ProductComponent implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService
   ) {
-    // Nastavení debounce pro vyhledávání
     this.searchTerms.pipe(
-      debounceTime(300),      // Počkat 300ms po poslední změně
-      distinctUntilChanged()  // Ignorovat, pokud se hodnota nezměnila
+      debounceTime(300),     
+      distinctUntilChanged()
     ).subscribe(term => {
       this.searchTerm = term;
+      this.applyFilters();
+    });
+    
+    this.priceChanges.pipe(
+      debounceTime(500) 
+    ).subscribe(() => {
       this.applyFilters();
     });
   }
@@ -101,20 +108,24 @@ export class ProductComponent implements OnInit {
     } else {
       this.isLoadingMore = true;
     }
-
-    // Získat ID kategorie, pokud je vybrána
+  
     const categoryId = this.selectedCategory ? 
       this.categories.findIndex(c => c === this.selectedCategory) + 1 : undefined;
-
+  
+    const price_min = this.priceMin !== null ? this.priceMin : 1;
+    const price_max = this.priceMax !== null ? this.priceMax : 100000000000;
+  
     this.productService.getProducts(
       this.currentOffset,
-      12, // limit
+      12,
       this.searchTerm,
-      categoryId
+      categoryId,
+      price_min,
+      price_max
     ).subscribe({
       next: (newProducts: Product[]) => {
         this.processProductResults(newProducts);
-        this.filteredProducts = this.products; // Filtrace již probíhá na serveru
+        this.filteredProducts = this.products;
         this.isLoading = false;
         this.isLoadingMore = false;
       },
@@ -153,27 +164,37 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  // Nová metoda pro spouštění vyhledávání s debounce
   onSearchChange() {
     this.searchTerms.next(this.searchTerm);
   }
 
-  // Vymazání vyhledávání
   clearSearch() {
     this.searchTerm = '';
     this.applyFilters();
   }
 
-  // Změna kategorie
   onCategoryChange() {
     this.applyFilters();
   }
+  
+  onPriceChange() {
+    // Validace pouze v případě, že obě hodnoty existují a uživatel dokončil zadávání
+    if (this.priceMin !== null && this.priceMax !== null) {
+      // Přidáme timeout, aby měl uživatel čas dokončit zadávání
+      setTimeout(() => {
+        if (this.priceMin !== null && this.priceMax !== null && this.priceMax < this.priceMin) {
+          this.priceMax = this.priceMin;
+        }
+      }, 1000); // Čekáme 1 sekundu po poslední změně
+    }
+    
+    this.priceChanges.next();
+  }
 
-  // Aplikace filtrů - reset offsetu a načtení nových dat
   applyFilters() {
-    this.currentOffset = 0; // Resetujeme offset při novém vyhledávání
-    this.products = []; // Resetujeme seznam produktů
-    this.loadProducts(false); // Načteme produkty s filtry
+    this.currentOffset = 0;
+    this.products = [];
+    this.loadProducts(false);
   }
 
   openAddDialog() {
