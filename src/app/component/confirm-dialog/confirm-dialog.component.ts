@@ -7,7 +7,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 export interface ConfirmDialogData {
   title: string;
-  message: string;
   productName: string;
 }
 

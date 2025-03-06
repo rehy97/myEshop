@@ -11,17 +11,39 @@ import { ErrorHandlingService } from './error-handling.service';
 })
 export class ProductService {
   private apiUrl = `${environment.apiUrl}/products`;
-  private limit = 12;
 
   constructor(
     private http: HttpClient,
     private errorService: ErrorHandlingService
   ) {}
 
-  getProducts(offset: number = 0): Observable<Product[]> {
-    const params = new HttpParams()
+  getProducts(
+    offset: number = 0,
+    limit: number = 12,
+    title?: string,
+    categoryId?: number,
+    price_min?: number,
+    price_max?: number
+  ): Observable<Product[]> {
+    let params = new HttpParams()
       .set('offset', offset.toString())
-      .set('limit', this.limit.toString());
+      .set('limit', limit.toString());
+      
+    if (title && title.trim() !== '') {
+      params = params.set('title', title);
+    }
+    
+    if (categoryId) {
+      params = params.set('categoryId', categoryId.toString());
+    }
+    
+    if (price_min !== undefined) {
+      params = params.set('price_min', price_min.toString());
+    }
+    
+    if (price_max !== undefined) {
+      params = params.set('price_max', price_max.toString());
+    }
 
     return this.http.get<Product[]>(this.apiUrl, { params })
       .pipe(

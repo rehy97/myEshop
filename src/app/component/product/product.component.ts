@@ -13,7 +13,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../services/category.service';
@@ -52,6 +53,9 @@ export class ProductComponent implements OnInit {
   currentOffset = 0;
   hasMoreProducts = true;
   isLoadingMore = false;
+  
+  // Pro implementaci debounce vyhledávání
+  private searchTerms = new Subject<string>();
 
   constructor(
     private productService: ProductService,
@@ -59,7 +63,16 @@ export class ProductComponent implements OnInit {
     private dialog: MatDialog,
     private toastr: ToastrService,
     private translate: TranslateService
-  ) {}
+  ) {
+    // Nastavení debounce pro vyhledávání
+    this.searchTerms.pipe(
+      debounceTime(300),      // Počkat 300ms po poslední změně
+      distinctUntilChanged()  // Ignorovat, pokud se hodnota nezměnila
+    ).subscribe(term => {
+      this.searchTerm = term;
+      this.applyFilters();
+    });
+  }
 
   ngOnInit() {
     this.loadInitialData();
@@ -69,14 +82,11 @@ export class ProductComponent implements OnInit {
     this.isLoading = true;
     
     forkJoin({
-      products: this.productService.getProducts(this.currentOffset),
       categories: this.categoryService.getCategories()
     }).subscribe({
       next: (results) => {
-        this.processProductResults(results.products);
         this.processCategoriesResults(results.categories);
-        this.filterProducts();
-        this.isLoading = false;
+        this.loadProducts(false);
       },
       error: (error) => {
         this.handleError('products.errors.loadFailed');
@@ -92,10 +102,19 @@ export class ProductComponent implements OnInit {
       this.isLoadingMore = true;
     }
 
-    this.productService.getProducts(this.currentOffset).subscribe({
+    // Získat ID kategorie, pokud je vybrána
+    const categoryId = this.selectedCategory ? 
+      this.categories.findIndex(c => c === this.selectedCategory) + 1 : undefined;
+
+    this.productService.getProducts(
+      this.currentOffset,
+      12, // limit
+      this.searchTerm,
+      categoryId
+    ).subscribe({
       next: (newProducts: Product[]) => {
         this.processProductResults(newProducts);
-        this.filterProducts();
+        this.filteredProducts = this.products; // Filtrace již probíhá na serveru
         this.isLoading = false;
         this.isLoadingMore = false;
       },
@@ -134,23 +153,27 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  filterProducts() {
-    let filtered = this.products;
-    
-    if (this.selectedCategory) {
-      filtered = filtered.filter(
-        product => product.category.name === this.selectedCategory
-      );
-    }
-    
-    if (this.searchTerm && this.searchTerm.trim() !== '') {
-      const term = this.searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(
-        product => product.title.toLowerCase().includes(term)
-      );
-    }
-    
-    this.filteredProducts = filtered;
+  // Nová metoda pro spouštění vyhledávání s debounce
+  onSearchChange() {
+    this.searchTerms.next(this.searchTerm);
+  }
+
+  // Vymazání vyhledávání
+  clearSearch() {
+    this.searchTerm = '';
+    this.applyFilters();
+  }
+
+  // Změna kategorie
+  onCategoryChange() {
+    this.applyFilters();
+  }
+
+  // Aplikace filtrů - reset offsetu a načtení nových dat
+  applyFilters() {
+    this.currentOffset = 0; // Resetujeme offset při novém vyhledávání
+    this.products = []; // Resetujeme seznam produktů
+    this.loadProducts(false); // Načteme produkty s filtry
   }
 
   openAddDialog() {
@@ -212,7 +235,6 @@ export class ProductComponent implements OnInit {
       width: '400px',
       data: {
         title: this.translate.instant('products.confirmDelete'),
-        message: this.translate.instant('products.confirmDelete'),
         productName: productName
       }
     });

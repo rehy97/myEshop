@@ -4,8 +4,17 @@
     <div class="header-actions">
       <mat-form-field appearance="outline">
         <mat-label>{{ 'products.search.label' | translate }}</mat-label>
-        <input matInput [(ngModel)]="searchTerm" (keyup)="filterProducts()" placeholder="{{ 'products.search.placeholder' | translate }}">
-        <button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''; filterProducts()">
+        <input 
+          matInput 
+          [(ngModel)]="searchTerm" 
+          (ngModelChange)="onSearchChange()" 
+          placeholder="{{ 'products.search.placeholder' | translate }}">
+        <button 
+          *ngIf="searchTerm" 
+          matSuffix 
+          mat-icon-button 
+          aria-label="Clear" 
+          (click)="clearSearch()">
           <mat-icon>close</mat-icon>
         </button>
         <mat-icon matPrefix>search</mat-icon>
@@ -13,7 +22,9 @@
       
       <mat-form-field appearance="outline">
         <mat-label>{{ 'products.category.filter' | translate }}</mat-label>
-        <mat-select [(ngModel)]="selectedCategory" (selectionChange)="filterProducts()">
+        <mat-select 
+          [(ngModel)]="selectedCategory" 
+          (selectionChange)="onCategoryChange()">
           <mat-option value="">{{ 'products.category.all' | translate }}</mat-option>
           <mat-option *ngFor="let category of categories" [value]="category">
             {{category}}
@@ -46,13 +57,18 @@
       </mat-card-content>
       
       <mat-card-actions>
-        <button mat-icon-button color="primary" (click)="openEditDialog(product)" 
-                [matTooltip]="'products.buttons.edit' | translate">
+        <button 
+          mat-icon-button 
+          color="primary" 
+          (click)="openEditDialog(product)"
+          [matTooltip]="'products.buttons.edit' | translate">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn" 
-                (click)="deleteProduct(product.id, $event)"
-                [matTooltip]="'products.buttons.delete' | translate">
+        <button 
+          mat-icon-button 
+          color="warn"
+          (click)="deleteProduct(product.id, $event)"
+          [matTooltip]="'products.buttons.delete' | translate">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-card-actions>
@@ -60,10 +76,11 @@
   </div>
 
   <div class="load-more-section" *ngIf="!isLoading && hasMoreProducts && filteredProducts.length > 0">
-    <button mat-raised-button 
-            color="primary" 
-            (click)="loadMoreProducts()" 
-            [disabled]="isLoadingMore">
+    <button 
+      mat-raised-button
+      color="primary"
+      (click)="loadMoreProducts()"
+      [disabled]="isLoadingMore">
       <mat-spinner diameter="20" *ngIf="isLoadingMore"></mat-spinner>
       <span *ngIf="!isLoadingMore">{{ 'products.buttons.loadMore' | translate }}</span>
     </button>
